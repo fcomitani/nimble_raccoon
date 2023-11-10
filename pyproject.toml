@@ -17,10 +17,23 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3"
 ]
-
 dependencies = [
-    ]
+  'numpy',
+  'pandas',
+  'scikit-learn',
+  'scikit-network',
+  'umap-learn',
+  'anytree',
+  'tqdm',
+  'pynndescent',
+  'matplotlib',
+  'loguru',
+  'faiss-cpu'
+]
 dynamic = ["version", "README.md"]
+
+[project.optional-dependencies]
+gpu = ['faiss-gpu']
 
 [project.urls]
 repository = "https://github.com/fcomitani/nimble-raccoon""

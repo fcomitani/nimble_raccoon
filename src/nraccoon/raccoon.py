@@ -1,8 +1,3 @@
-"""
-Nimble RACCOON
-F. Comitani     @2023-2024
-"""
-
 import os
 from typing import Any, Optional, Union, Callable, Iterable
 
@@ -20,7 +15,7 @@ from trees import build_tree
 from loguru import logger
 from datetime import datetime
 
-from utils import *
+from .utils import *
 
 
 class Raccoon:

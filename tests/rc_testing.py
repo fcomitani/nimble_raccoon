@@ -3,11 +3,11 @@ from functools import partial
 import pandas as pd
 import numpy as np
 
-from raccoon import Raccoon
+from nraccoon import Raccoon
 
 synth_table = pd.read_parquet('/Users/federico.comitani/Work/90d/synthons_avg_subsample_1k.pq')#.sample(10000)
 
-def half_sqrt_ranges(x, num_elements=5):
+def half_sqrt_ranges(x, num_elements: int=5):
     """ Return a list of integers from sqrt(x)/2 to sqrt(x) with
         num_elements elements.
         
