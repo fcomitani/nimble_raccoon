@@ -56,16 +56,3 @@ def load_tree(file: str) -> Node:
         root = importer.read(handle)
 
     return root
-
-def load_tree_as_list(file: str) -> list[Node]:
-    """ Load an anytree object saved as json.
-
-    :param file: path to input json file.
-    :return: list of nodes in the tree.
-    """
-
-    root = load_tree(file)
-    nodes = list(root.descendants)
-    nodes = sorted(nodes, key=lambda x: int(x.name.split('\\')[-1]))
-
-    return [root] + nodes

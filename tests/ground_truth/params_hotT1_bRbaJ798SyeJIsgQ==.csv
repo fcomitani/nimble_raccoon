@@ -1,0 +1,15 @@
+name,npc,nn,cparm,sil,nclu,notes
+0,0.999,8,0.100,0.307,2,
+0_0,0.999,10,0.250,0.328,3,
+0_0_0,0.999,10,0.250,0.396,2,
+0_0_0_1,50,0,nan,nan,0,maximum depth reached
+0_0_0_0,50,0,nan,nan,0,maximum depth reached
+0_0_2,nan,nan,nan,nan,0,no optimal parameters found
+0_0_1,0.999,8,0.250,0.364,2,
+0_0_1_0,50,0,nan,nan,0,maximum depth reached
+0_0_1_1,50,0,nan,nan,0,maximum depth reached
+0_1,0.999,10,0.250,0.261,2,
+0_1_0,0.999,8,0.250,0.518,2,
+0_1_0_0,50,0,nan,nan,0,maximum depth reached
+0_1_0_1,50,0,nan,nan,0,maximum depth reached
+0_1_1,nan,nan,nan,nan,0,no optimal parameters found

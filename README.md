@@ -13,11 +13,16 @@ A slim and fast reimplementation of [RACCOON](https://github.com/shlienlab/racco
 [![codecov](https://codecov.io/gh/fcomitani/simpsom/branch/main/graph/badge.svg?token=2OHOCO0O4I)](https://codecov.io/gh/fcomitani/simpsom) 
 -->
 
+It relies on [faiss](https://github.com/facebookresearch/faiss) for quick nearest neighbors searches and better memory management,
+but offers fewer functionalities, only allowing `cosine` and `euclidean` distances, Louvain as its clustering algorithm, and grid search.
+
 ## Installation
 
 `nimble-raccoon` can be installed with `pip` with the following command
 
     pip install nimble-raccoon 
+    
+ <!-- For the GPU-enable version, clone this repo and install add the `-gpu` flag -->
 
 ## Usage
 
@@ -27,7 +32,7 @@ with set parameters and then call it on the `input_data` object, a pandas datafr
     import numpy as np
     from functools import partial
 
-    from nraccoon import Raccoon
+    from nimbloon import Raccoon
 
     def half_sqrt_range(x: float, num_elements: int = 5) -> np.ndarray:
         """ Return a list of integers from sqrt(x)/2 to sqrt(x) with
@@ -79,6 +84,8 @@ Available parameters are:
 The output will be a one-hot-encoded dataframe with samples as rows and cluster labels as columns, and an anytree object with information on the
 hierarchical relationship among clusters.
 This information will also be automatically saved to disk in the `out_path` folder.
+
+Both tSVD and UMAP steps can be skipped, by setting `cumulative_variance` to `1` and/or `target_dimensions` to `None` respectively.
 
 ## Citation
 

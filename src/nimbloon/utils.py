@@ -198,4 +198,3 @@ def plot_silhouette(params: list[float], scores: list[float], save_path: Optiona
 
     if save_path is not None:
         plt.savefig(save_path)
-    #plt.show()

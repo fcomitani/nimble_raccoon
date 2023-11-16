@@ -1,34 +1,10 @@
-- Testing suite
-- README
-- Add 2d plotting
 - Make library
 
 - Don't save embedding, add a function to regenerate them from the params
 - Search ideal parameters
 - Better memory handling
+- Add 2d plotting
 
 - see if silhouette is faster passing a precomputed distance matrix
-
+- pacmap
         
-# # >>> REMOVE LANDMARKS, USE FAISS TO BETTER HANDLE MEMORY <<< 
-# landmarks_ix = input_data.index
-# if input_data.shape[0] > landmarks:
-#     self._logger.info(
-#         "Selecting {:d}/{:d} landmark points".format(landmarks, input_data.shape[0]))
-#     # TODO: add option to select landmarks in smarter ways 
-#     # (e.g. by selecting samples with most connections).
-#     landmarks_ix = np.random.choice(
-#         input_data.index, size=landmarks, replace=False)
-#     discarded_tsvd = data_tsvd[~input_data.index.isin(landmarks_ix), :]
-#     data_tsvd = data_tsvd[input_data.index.isin(landmarks_ix), :]
-
-
-
-            #best_labels, index=landmarks_ix, name=name).astype(int)
-
-# if landmarks_ix.shape[0] < input_data.shape[0]:
-#     self._logger.info('Adding discarded points back.')
-#     _, nn_ixs = nn_faiss(data_tsvd, n_neighbors=1, query_points=discarded_tsvd)
-#     best_labels = pd.concat([best_labels,
-#                             pd.Series(best_labels.values[nn_ixs[:, 0]], index=input_data.index[~input_data.index.isin(landmarks_ix)], name=name)])\
-#         .loc[input_data.index]

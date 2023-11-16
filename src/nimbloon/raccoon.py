@@ -10,12 +10,11 @@ from sknetwork.clustering import Louvain
 
 from umap import UMAP
 
-from trees import build_tree
-
 from loguru import logger
 from datetime import datetime
 
 from .utils import *
+from .trees import build_tree
 
 
 class Raccoon:
@@ -66,14 +65,14 @@ class Raccoon:
         self._logger = logger
         self._logger.add(os.path.join(out_path, "rc_{}_{}.log".format(datetime.now().strftime('%Y%m%d'), os.getpid())))
 
-        if isinstance(cumulative_variance, float):
+        if not isinstance(cumulative_variance, Iterable):
             cumulative_variance = [cumulative_variance]
-        if isinstance(clustering_parameter, float):
+        if not isinstance(clustering_parameter, Iterable):
             clustering_parameter = [clustering_parameter]
 
         self._params_table = None
 
-        if min_cluster_size <= target_dimensions:
+        if target_dimensions is not None and min_cluster_size <= target_dimensions:
             self._logger.warning("Minimum size of clusters is smaller or equal than target dimensions.\n"+ 
                                  "UMAP spectral initialization may be skipped in smaller clusters.")
             
@@ -342,7 +341,7 @@ class Raccoon:
         self._params_table = open(os.path.join(self.out_path, 'params.csv'), 'w')
         self._params_table.write("name,npc,nn,cparm,sil,nclu,notes\n")
 
-        labels = self._iterate(input_data, name=name)
+        labels = self._iterate(input_data, name=name).fillna(-1).astype(int)
         
         self._params_table.close()
         self._params_table = None

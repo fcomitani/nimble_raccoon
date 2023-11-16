@@ -3,7 +3,7 @@ from functools import partial
 import pandas as pd
 import numpy as np
 
-from nraccoon import Raccoon
+from nimbloon import Raccoon
 
 synth_table = pd.read_parquet('/Users/federico.comitani/Work/90d/synthons_avg_subsample_1k.pq')#.sample(10000)
 
