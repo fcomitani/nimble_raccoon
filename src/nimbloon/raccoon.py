@@ -146,7 +146,7 @@ class Raccoon:
         :return: tuple(np.ndarray, np.ndarray), umap projection and indices of the nearest neighbors.
         """
 
-        nn_dists, nn_ixs = nn_faiss(input_data, metric=metric, n_neighbors=n_neighbors)
+        nn_dists, nn_ixs = nn_faiss(input_data, None, metric=metric, n_neighbors=n_neighbors)
 
         if target_dimensions != None:
             self._logger.info("Reducing dimensions to {:d} with UMAP.".format(target_dimensions))
@@ -161,7 +161,7 @@ class Raccoon:
                 self._logger.info("Scaling UMAP entries to unit norm.")
                 data_umap /= np.linalg.norm(data_umap, axis=1, keepdims=True)
 
-            nn_dists, nn_ixs = nn_faiss(data_umap, metric=metric, n_neighbors=n_neighbors)
+            nn_dists, nn_ixs = nn_faiss(data_umap, None, metric=metric, n_neighbors=n_neighbors)
 
         else:
             self._logger.info("Reduced dimensions was set to None. Skipping UMAP.")
@@ -249,13 +249,14 @@ class Raccoon:
             
             for nn in n_neighbors:
          
-                umap_proj, nn_ixs_u = self._single_umap(data_tsvd,
-                                                         target_dimensions=target_dimensions,
-                                                         n_neighbors=nn,
-                                                         metric=metric)
+                _, nn_ixs_u = self._single_umap(data_tsvd,
+                                                target_dimensions=target_dimensions,
+                                                n_neighbors=nn,
+                                                metric=metric)
 
                 self._logger.info("Calculating SNN matrix.")
-                snn_mat = snn(nn_ixs_u,
+                snn_mat = snn(searchable_set=nn_ixs_u, 
+                            query_points=None,
                             metric="precomputed",
                             n_neighbors=nn,
                             logger=self._logger)
@@ -266,7 +267,7 @@ class Raccoon:
                     self._logger.info("Clustering with parameter: {:.3f}".format(cp))
                     try:
                         labels = Louvain(resolution=cp).fit_predict(snn_mat)
-                        sil = sils(umap_proj, labels, metric=metric)
+                        sil = sils(1-snn_mat, labels, metric="precomputed")
                         sil_list.append(sil)
                         if sil > best_results['silhouette_score']:
                             best_results['silhouette_score'] = sil
@@ -338,6 +339,8 @@ class Raccoon:
         :return: tuple(pd.DataFrame, list), clusters and hierarchical tree.
         """
 
+        print_header()
+        
         self._params_table = open(os.path.join(self.out_path, 'params.csv'), 'w')
         self._params_table.write("name,npc,nn,cparm,sil,nclu,notes\n")
 

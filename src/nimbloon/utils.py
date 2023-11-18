@@ -1,4 +1,8 @@
+import os
+
 from typing import Optional
+
+from copy import deepcopy
 
 import numpy as np
 import pandas as pd
@@ -14,7 +18,6 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from loguru import logger
-
 
 class Constants:
     """ Class to store all the constants used in the project. """
@@ -69,7 +72,7 @@ def svd_by_variance(df: pd.DataFrame, cumulative_variance: float = .99,
     return svd, svd.transform(df).astype(np.float32)
 
 
-def nn_faiss(searchable_set: np.array, 
+def nn_faiss(searchable_set: np.array,
              query_points: Optional[np.array] = None,
              metric: str = "cosine",
              n_neighbors: Optional[int] = None) -> tuple[np.array]:
@@ -81,7 +84,6 @@ def nn_faiss(searchable_set: np.array,
     :param n_neighbors: int, number of neighbors to return.
     :return: tuple, distances and indices of the nearest neighbors, of shape query_points x neighbors.
     """
-    # >>> RAM ISSUES RATHER THAN LANDMARKS  https://github.com/facebookresearch/faiss/wiki/Indexes-that-do-not-fit-in-RAM <<<
 
     if metric == "cosine":
         index_function = faiss.IndexFlatIP
@@ -97,26 +99,28 @@ def nn_faiss(searchable_set: np.array,
     else:
         if searchable_set.shape[1] != query_points.shape[1]:
             raise ValueError(
-            'Searchable set and query points must have the same number of features.')
+                'Searchable set and query points must have the same number of features.')
 
     index = index_function(searchable_set.shape[1])
     index.add(searchable_set)
-    return index.search(query_points, k=n_neighbors if n_neighbors is not None 
+    return index.search(query_points, k=n_neighbors if n_neighbors is not None
                         else int(np.sqrt(searchable_set.shape[0])))
 
 
-def snn(values: np.ndarray,
+def snn(searchable_set: np.array,
+        query_points: Optional[np.array] = None,
         metric: str = "cosine",
         n_neighbors: Optional[int] = None,
         low_mem: bool = False,
-        logger: Optional[type(logger)] = None) -> np.ndarray:
+        logger: Optional[type(logger)] = None,
+        verbose: bool = True) -> np.ndarray:
     """ Calculates Shared Nearest Neighbor (SNN) matrix with faiss
-    Ultrafast, but only works with cosine distance.
     https://github.com/facebookresearch/faiss/wiki/Faiss-indexes
 
     Note: I tried multiprocessing but it is not worth it (it is actually slower).
 
-    :param values: array, input matrix of samples x features.
+    :param searchable_set: array, searchable set of samples x features, from which the neighbors will be pooled.
+    :param query_points: array, query points of samples x features. If None, will be set to searchable_set.
     :param metric: str, metric to evaluate distances. Can either be "cosine", "euclidean" or "precomputed". 
         If "precomputed" values need to be a np.array of shape data_points x n_neighbors with the 
         indices of the nearest neighbors. Default: "cosine".
@@ -128,34 +132,58 @@ def snn(values: np.ndarray,
 
     print_function = logger.info if logger is not None else print
 
-    n_neighbors = np.sqrt(
-        values.shape[0]) if n_neighbors is None else n_neighbors
+    n_neighbors = int(np.sqrt(
+        searchable_set.shape[0])) if n_neighbors is None else n_neighbors
+
+    offset = 0
 
     if metric == "precomputed":
-        nn_ixs = values
+        print_function('Running SNN with precomputed NN indices.'+\
+                       'query_points parameter will be ignored.')
+        nn_ixs = searchable_set
     else:
+        if query_points is None:
+            query_points = searchable_set
+        else:
+            if searchable_set.shape[1] != query_points.shape[1]:
+                raise ValueError(
+                    'Searchable set and query points must have the same number of features.')
+            query_points = np.concatenate([searchable_set, query_points])
+            offset = searchable_set.shape[0]
+    
         print_function('Finding nearest neighbors.')
-        _, nn_ixs = nn_faiss(values, metric=metric, n_neighbors=n_neighbors)
+        _, nn_ixs = nn_faiss(searchable_set, query_points,
+                         metric=metric, n_neighbors=n_neighbors)
 
     neighborhoods = [set(ixs) for ixs in nn_ixs]
 
-    print_function('Finding second degree neighborhood.')
+    if verbose:
+        print_function('Symmetrizing neighborhoods.')
+    query_neighborhoods = deepcopy(neighborhoods)
+    for i, n in tqdm(enumerate(neighborhoods), total=len(neighborhoods), disable= not verbose):
+        for _, s in enumerate(n):
+            query_neighborhoods[s].update({i})      
+        if i==offset-1:
+            break     
+
+    if verbose:
+        print_function('Finding second degree symetric neighbors.')
     query_neighborhoods = [first_nn_list | set([second_nn for first_nn in first_nn_list
-                                                for second_nn in neighborhoods[first_nn]])
-                           for i, first_nn_list in tqdm(enumerate(neighborhoods), total=len(neighborhoods))]
+                                                for second_nn in query_neighborhoods[first_nn]])
+                           for _, first_nn_list in tqdm(enumerate(query_neighborhoods[offset:]),
+                                                        total=len(query_neighborhoods[offset:]), disable= not verbose)]
 
-    print_function('Initializing matrix.')
+    if verbose:
+        print_function('Initializing matrix.')
     shared_neighbors = np.zeros(
-        (nn_ixs.shape[0], nn_ixs.shape[0]), dtype=np.uint16)
+        (len(query_neighborhoods), searchable_set.shape[0]), dtype=np.uint16)
 
-    print_function('Evaluating intersections.')
-    for i, sn in tqdm(enumerate(query_neighborhoods), total=len(query_neighborhoods)):
+    if verbose:
+        print_function('Evaluating intersections.')
+    for i, sn in tqdm(enumerate(query_neighborhoods), total=len(query_neighborhoods), disable= not verbose):
         for _, s in enumerate(sn):
-            if i != s:
-                shared_neighbors[i, s] = len(
-                    neighborhoods[i].intersection(neighborhoods[s]))
-                
-    np.fill_diagonal(shared_neighbors, n_neighbors)
+            shared_neighbors[i, s] = len(
+                neighborhoods[i+offset].intersection(neighborhoods[s]))
 
     return csr_matrix(shared_neighbors) if low_mem else shared_neighbors
 
@@ -198,3 +226,10 @@ def plot_silhouette(params: list[float], scores: list[float], save_path: Optiona
 
     if save_path is not None:
         plt.savefig(save_path)
+
+def print_header() -> None:
+    
+    with open(os.path.join(os.path.dirname(__file__), 'static', 'header.txt'), 'r') as file:
+        for line in file.readlines():
+            print(line, end='')
+            
