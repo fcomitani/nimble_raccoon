@@ -1,7 +1,0 @@
-{
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.python"
-    },
-    "python.formatting.provider": "none",
-    "python.pythonPath": "/Users/federicocomitani/miniconda3/envs/py310/bin/python"
-}
