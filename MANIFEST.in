@@ -1,1 +1,2 @@
 recursive-include src/nimbloon/static *
+include pyproject.toml
