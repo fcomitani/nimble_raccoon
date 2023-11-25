@@ -34,25 +34,31 @@ with set parameters and then call it on the `input_data` object, a pandas datafr
 
     from nimbloon import Raccoon
 
+You can define custom functions to dynamically adapt the search range
+to the size of the dataset.
+
     def half_sqrt_range(x, num_elements=5):
         sq = np.sqrt(x)
-        return np.linspace(sq/2, sq, 
-                           num_elements, dtype=int)
+        return np.linspace(sq/2, sq, num_elements, dtype=int)
 
     rc_args = {'metric': 'cosine',
                'scale': False,
                'cumulative_variance': [.75, .8, .9, .95, .99],
                'clustering_parameter': np.logspace(-2, 1.5, 10),
-               'n_neighbors': partial(half_sqrt_range, 
-                                      num_elements=3),
+               'n_neighbors': partial(half_sqrt_range, num_elements=3),
                'target_dimensions': 12,
                'min_cluster_size': 25,
                'max_neighbors': 100,
                'silhouette_threshold': 0.,
                'max_depth': 5}
 
-    rc = Raccoon(outh_path='./rc_output', **rc_args)
-    rc_labels, rc_tree = rc(input_table)
+Once everything is set up you can instantiate the Raccoon object.
+
+`rc = Raccoon(outh_path='./rc_output', **rc_args)`
+
+And then call it on the input dataset to build the clusters hierarchy.
+
+`rc_labels, rc_tree = rc(input_table)`
 
 Available parameters are:
 
