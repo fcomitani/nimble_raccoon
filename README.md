@@ -34,30 +34,24 @@ with set parameters and then call it on the `input_data` object, a pandas datafr
 
     from nimbloon import Raccoon
 
-    def half_sqrt_range(x: float, num_elements: int = 5) -> np.ndarray:
-        """ Return a list of integers from sqrt(x)/2 to sqrt(x) with
-            num_elements elements.
-            
-        :param x: integer.
-        :param num_elements: number of elements in the list.
-        :return: list of integers.
-        """
-
+    def half_sqrt_range(x, num_elements=5):
         sq = np.sqrt(x)
-        return np.linspace(sq/2, sq, num_elements, dtype=int)
+        return np.linspace(sq/2, sq, 
+                           num_elements, dtype=int)
 
-    rc_args={'metric': 'cosine',
-            'scale' : False,
-            'cumulative_variance' : [.75, .8, .9, .95, .99],
-            'clustering_parameter' : np.logspace(-2, 1.5, 10),
-            'n_neighbors' : partial(half_sqrt_range, num_elements=3),
-            'target_dimensions': 12,
-            'min_cluster_size' : 25,
-            'max_neighbors' : 100,
-            'silhouette_threshold' :0.,
-            'max_depth': 5}
+    rc_args = {'metric': 'cosine',
+               'scale': False,
+               'cumulative_variance': [.75, .8, .9, .95, .99],
+               'clustering_parameter': np.logspace(-2, 1.5, 10),
+               'n_neighbors': partial(half_sqrt_range, 
+                                      num_elements=3),
+               'target_dimensions': 12,
+               'min_cluster_size': 25,
+               'max_neighbors': 100,
+               'silhouette_threshold': 0.,
+               'max_depth': 5}
 
-    rc = Raccoon(out_path='./rc_output', **rc_args)
+    rc = Raccoon(outh_path='./rc_output', **rc_args)
     rc_labels, rc_tree = rc(input_table)
 
 Available parameters are:
