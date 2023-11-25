@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm[toml]", "wheel"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,6 +9,7 @@ authors = [
 ]
 description = "A slim and fast implementation of the RACCOON clustering library."
 license = {text = "GPL-3.0"}
+version = "0.1.0"
 requires-python = ">=3.10"
 keywords=["clustering", "dimensionality-reduction", "iterative",
 	  "hierarchical-clustering", "multi-scale", "scale-adaptive",
@@ -29,14 +30,11 @@ dependencies = [
   'pynndescent>=0.5.10',
   'matplotlib>=3.8.1',
   'loguru>=0.7.2',
-  'pytest>=7.4.3',
-  'faiss-cpu>=1.7.4'
+  'faiss-cpu>=1.7.4',
+  'toml>=0.10.2',
+  'pytest>=7.4.3'
 ]
-dynamic = ["version", "readme"]
-
-
-[tool.setuptools_scm]
-write_to = "src/nimbloon/_version.py"
+dynamic = ["readme"]
 
 [tool.setuptools.dynamic]
 readme = {file=["README.md"]}
