@@ -62,7 +62,7 @@ def svd_by_variance(df: pd.DataFrame, cumulative_variance: float = .99,
     cutoff = sum(np.cumsum(evr) <= cumulative_variance)
     if cutoff < 2:
         cutoff = 2
-    print("tSVD: keeping {:d} components to reach {:.3f} cumulative variance".format(
+    logger.info("tSVD: keeping {:d} components to reach {:.3f} cumulative variance".format(
         cutoff, np.cumsum(evr)[cutoff-1]))
 
     svd.n_components = cutoff

@@ -166,9 +166,8 @@ class Raccoon:
         else:
             self._logger.info("Reduced dimensions was set to None. Skipping UMAP.")
             data_umap = input_data
-            nn_dists, nn_ixs = nn_dists, nn_ixs
         
-        return data_umap, nn_ixs, 
+        return data_umap, nn_ixs
 
 
     def _single_iteration(self, input_data: pd.DataFrame,
