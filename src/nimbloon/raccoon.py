@@ -267,7 +267,6 @@ class Raccoon:
                     try:
                         labels = Louvain(resolution=cp).fit_predict(snn_mat)
                         sil = sils(1-snn_mat, labels, metric="precomputed")
-                        sil_list.append(sil)
                         if sil > best_results['silhouette_score']:
                             best_results['silhouette_score'] = sil
                             best_results['cumulative_variance'] = cv
@@ -277,7 +276,10 @@ class Raccoon:
                             best_results['silhouette_list'] = sil_list
                             best_results['was_updated'] = True
                     except ValueError:
-                        sil_list.append(silhouette_threshold)
+                        sil = silhouette_threshold
+                        logger.debug('Clustering failed.')
+                    sil_list.append(sil)
+                    logger.debug("Sil: {}, CV: {}, NN: {}, CP: {}".format(sil, cv, nn, cp))
 
         if best_results['was_updated']:
             plot_silhouette(clustering_parameter, best_results['silhouette_list'], os.path.join(
