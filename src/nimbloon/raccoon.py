@@ -34,7 +34,8 @@ class Raccoon:
                  max_neighbors: int = 100, 
                  silhouette_threshold: float = 0.,
                  max_depth: Optional[int] = None, 
-                 random_state: Optional[int] = None) -> None:
+                 random_state: Optional[int] = None,
+                 debug: bool = False) -> None:
         """ Initializes the RACCOON object.
 
         :param out_path: str, path where all output will be saved Default: "./rc_output".
@@ -53,6 +54,7 @@ class Raccoon:
         :param silhouette_threshold: float, baseline silhouette score. Default: 0.
         :param max_depth: Optional[int], maximum number of levels to use for the clustering.  Starts at 0 for root search. Default: None.
         :param random_state: Optional[int], random state to use for reproducibility. Default: None.
+        :param debug: bool, activate debug logging.
         """
 
         self.random_state = random_state
@@ -63,7 +65,8 @@ class Raccoon:
         os.makedirs(os.path.join(self.out_path, "plots"), exist_ok=True)
 
         self._logger = logger
-        self._logger.add(os.path.join(out_path, "rc_{}_{}.log".format(datetime.now().strftime('%Y%m%d'), os.getpid())))
+        self._logger.add(os.path.join(out_path, "rc_{}_{}.log".format(datetime.now().strftime('%Y%m%d'), os.getpid())),  
+                         level="DEBUG" if debug else "INFO" )
 
         if not isinstance(cumulative_variance, Iterable):
             cumulative_variance = [cumulative_variance]
@@ -258,12 +261,12 @@ class Raccoon:
                             query_points=None,
                             metric="precomputed",
                             n_neighbors=nn,
-                            logger=self._logger)
+                            logger=self._logger)/nn
 
                 sil_list = []
                 self._logger.info("Clustering.")
                 for cp in clustering_parameter:
-                    self._logger.info("Clustering with parameter: {:.3f}".format(cp))
+                    self._logger.debug("Clustering with parameter: {:.3f}".format(cp))
                     try:
                         labels = Louvain(resolution=cp).fit_predict(snn_mat)
                         sil = sils(1-snn_mat, labels, metric="precomputed")
@@ -277,9 +280,9 @@ class Raccoon:
                             best_results['was_updated'] = True
                     except ValueError:
                         sil = silhouette_threshold
-                        logger.debug('Clustering failed.')
+                        self._logger.debug('Clustering failed.')
                     sil_list.append(sil)
-                    logger.debug("Sil: {}, CV: {}, NN: {}, CP: {}".format(sil, cv, nn, cp))
+                    self._logger.debug("Sil: {}, CV: {}, NN: {}, CP: {}".format(sil, cv, nn, cp))
 
         if best_results['was_updated']:
             plot_silhouette(clustering_parameter, best_results['silhouette_list'], os.path.join(

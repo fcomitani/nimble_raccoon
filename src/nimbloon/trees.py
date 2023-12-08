@@ -31,7 +31,6 @@ def build_tree(table: pd.DataFrame, out_path=None) -> Node:
         nodes.append(Node(col,
                           population=int((~np.isnan(table[col])).sum()),
                           parent=find_parent(col),
-                          level=col.count('_'),
                           leaf=None))
 
     for n in nodes:
