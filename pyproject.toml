@@ -9,7 +9,7 @@ authors = [
 ]
 description = "A slim and fast implementation of the RACCOON clustering library."
 license = {text = "GPL-3.0"}
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.10"
 keywords=["clustering", "dimensionality-reduction", "iterative",
 	  "hierarchical-clustering", "multi-scale", "scale-adaptive",
