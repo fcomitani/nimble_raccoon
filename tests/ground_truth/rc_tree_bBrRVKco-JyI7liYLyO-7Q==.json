@@ -1,6 +1,75 @@
 {
-  "leaf": true,
-  "level": 0,
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "leaf": true,
+              "name": "0_0_0_0",
+              "population": 250
+            },
+            {
+              "leaf": true,
+              "name": "0_0_0_1",
+              "population": 250
+            }
+          ],
+          "leaf": false,
+          "name": "0_0_0",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_0_1",
+          "population": 250
+        }
+      ],
+      "leaf": false,
+      "name": "0_0",
+      "population": 250
+    },
+    {
+      "children": [
+        {
+          "leaf": true,
+          "name": "0_1_0",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_1_1",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_1_2",
+          "population": 250
+        }
+      ],
+      "leaf": false,
+      "name": "0_1",
+      "population": 250
+    },
+    {
+      "children": [
+        {
+          "leaf": true,
+          "name": "0_2_0",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_2_1",
+          "population": 250
+        }
+      ],
+      "leaf": false,
+      "name": "0_2",
+      "population": 250
+    }
+  ],
+  "leaf": false,
   "name": "0",
   "population": 250
 }

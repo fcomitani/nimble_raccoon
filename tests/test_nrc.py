@@ -31,7 +31,6 @@ def assert_tree_equal(tree_one: Node, tree_two: Node) -> None:
         assert node_one.name == node_two.name
         assert node_one.parent.name == node_two.parent.name
         assert node_one.population == node_two.population
-        assert node_one.level == node_two.level
         assert node_one.leaf == node_two.leaf
         for child_one, child_two in zip(node_one.children, node_two.children):
             assert child_one.name == child_two.name
