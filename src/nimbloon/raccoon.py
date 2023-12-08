@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Any, Optional, Union, Callable, Iterable
 
 import numpy as np
@@ -65,8 +66,9 @@ class Raccoon:
         os.makedirs(os.path.join(self.out_path, "plots"), exist_ok=True)
 
         self._logger = logger
+        self._logger.add(sys.stderr,level="DEBUG" if debug else "INFO")
         self._logger.add(os.path.join(out_path, "rc_{}_{}.log".format(datetime.now().strftime('%Y%m%d'), os.getpid())),  
-                         level="DEBUG" if debug else "INFO" )
+                         level="DEBUG" if debug else "INFO")
 
         if not isinstance(cumulative_variance, Iterable):
             cumulative_variance = [cumulative_variance]
