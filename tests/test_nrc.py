@@ -21,7 +21,7 @@ input_path = os.path.join("./tests")
 assert os.path.exists(input_path)
 
 np.random.seed(32)
-dummy_data = pd.DataFrame(np.random.rand(250,50))
+dummy_data = pd.DataFrame(np.random.rand(250,25))
 
 
 def assert_tree_equal(tree_one: Node, tree_two: Node) -> None:

@@ -1,14 +1,20 @@
 name,npc,nn,cparm,sil,nclu,notes
-0,0.999,10,0.250,0.087,3,
-0_2,0.999,8,0.250,0.203,2,
-0_2_0,nan,nan,nan,nan,0,no optimal parameters found
-0_2_1,50,0,nan,nan,0,too few members
-0_0,0.999,10,0.250,0.141,2,
-0_0_0,0.999,8,0.250,0.157,2,
-0_0_0_0,50,0,nan,nan,0,maximum depth reached
-0_0_0_1,50,0,nan,nan,0,maximum depth reached
+0,0.999,8,0.250,0.123,5,
+0_0,0.999,10,0.250,0.230,2,
 0_0_1,nan,nan,nan,nan,0,no optimal parameters found
-0_1,0.999,8,0.250,0.233,3,
+0_0_0,0.999,10,0.250,0.452,2,
+0_0_0_0,25,0,nan,nan,0,maximum depth reached
+0_0_0_1,25,0,nan,nan,0,maximum depth reached
+0_3,0.999,10,0.250,0.365,2,
+0_3_1,25,0,nan,nan,0,too few members
+0_3_0,nan,nan,nan,nan,0,no optimal parameters found
+0_1,0.999,10,0.250,0.272,2,
+0_1_1,25,0,nan,nan,0,too few members
 0_1_0,nan,nan,nan,nan,0,no optimal parameters found
-0_1_1,50,0,nan,nan,0,too few members
-0_1_2,50,0,nan,nan,0,too few members
+0_4,0.999,8,0.250,0.417,2,
+0_4_0,25,0,nan,nan,0,too few members
+0_4_1,25,0,nan,nan,0,too few members
+0_2,0.999,8,0.250,0.359,3,
+0_2_0,25,0,nan,nan,0,too few members
+0_2_2,25,0,nan,nan,0,too few members
+0_2_1,25,0,nan,nan,0,too few members

@@ -3,13 +3,30 @@
     {
       "children": [
         {
-          "leaf": true,
+          "children": [
+            {
+              "leaf": true,
+              "name": "0_0_0_0",
+              "population": 250
+            },
+            {
+              "leaf": true,
+              "name": "0_0_0_1",
+              "population": 250
+            }
+          ],
+          "leaf": false,
           "name": "0_0_0",
           "population": 250
         },
         {
           "leaf": true,
           "name": "0_0_1",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_0_2",
           "population": 250
         }
       ],
@@ -35,26 +52,26 @@
       "population": 250
     },
     {
-      "leaf": true,
+      "children": [
+        {
+          "leaf": true,
+          "name": "0_2_0",
+          "population": 250
+        },
+        {
+          "leaf": true,
+          "name": "0_2_1",
+          "population": 250
+        }
+      ],
+      "leaf": false,
       "name": "0_2",
       "population": 250
     },
     {
       "children": [
         {
-          "children": [
-            {
-              "leaf": true,
-              "name": "0_3_0_0",
-              "population": 250
-            },
-            {
-              "leaf": true,
-              "name": "0_3_0_1",
-              "population": 250
-            }
-          ],
-          "leaf": false,
+          "leaf": true,
           "name": "0_3_0",
           "population": 250
         },
