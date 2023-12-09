@@ -360,5 +360,6 @@ class Raccoon:
 
         self._logger.info('All done!')
 
+        print(labels)
         return labels, tree
     
