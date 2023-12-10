@@ -271,7 +271,8 @@ class Raccoon:
                     self._logger.debug("Clustering with parameter: {:.3f}".format(cp))
                     try:
                         labels = Louvain(resolution=cp, 
-                                         random_state=self.random_state).fit_predict(snn_mat)
+                                         random_state=self.random_state,
+                                         sort_clusters=True).fit_predict(snn_mat)
                         sil = sils(1-snn_mat, labels, metric="precomputed")
                         if sil > best_results['silhouette_score']:
                             best_results['silhouette_score'] = sil
@@ -361,6 +362,5 @@ class Raccoon:
 
         self._logger.info('All done!')
 
-        print(labels)
         return labels, tree
     
