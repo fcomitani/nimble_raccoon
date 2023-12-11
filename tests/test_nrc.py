@@ -97,8 +97,6 @@ class TestRaccoon:
         
         truth_labels = pd.read_parquet(os.path.join(input_path, "ground_truth",
                                                 "rc_results_{:s}.pq".format(hashed_name)))
-        print(raccoon[1].columns)
-        print(truth_labels.columns)
         assert_frame_equal(raccoon[1], truth_labels)
         
         truth_tree = load_tree(os.path.join(input_path, "ground_truth",
